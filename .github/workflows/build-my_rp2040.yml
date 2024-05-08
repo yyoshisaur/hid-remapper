@@ -1,0 +1,31 @@
+name: build-rp2040
+on:
+  workflow_dispatch:
+defaults:
+  run:
+    shell: bash --noprofile --norc -x -e -o pipefail {0}
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install compiler, libraries and tools
+        run: |
+          sudo apt update
+          sudo apt install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib srecord
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          PICO_BOARD=my_hid-remapper_settings/waveshare_rp2040_zero_remapper cmake ..
+          make
+          mkdir artifacts
+          mv build/remapper_dual_a.uf2 artifacts/remapper_dual_a.uf2
+          mv build/remapper_dual_b.uf2 artifacts/remapper_dual_b.uf2
+          mv build/remapper.uf2 artifacts/remapper.uf2
+        working-directory: ./firmware
+      - uses: actions/upload-artifact@v3
+        with:
+          path: firmware/artifacts/*
