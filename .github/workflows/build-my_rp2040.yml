@@ -21,6 +21,7 @@ jobs:
           cd build
           PICO_BOARD=my_hid-remapper_settings/waveshare_rp2040_zero_remapper cmake ..
           make
+          cd ..
           mkdir artifacts
           mv build/remapper_dual_a.uf2 artifacts/remapper_dual_a.uf2
           mv build/remapper_dual_b.uf2 artifacts/remapper_dual_b.uf2
