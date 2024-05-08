@@ -1,4 +1,4 @@
-name: build-rp2040
+name: build-my_rp2040
 on:
   workflow_dispatch:
 defaults:
