@@ -8,7 +8,7 @@ const STICKY_FLAG = 1 << 0;
 const TAP_FLAG = 1 << 1;
 const HOLD_FLAG = 1 << 2;
 const CONFIG_SIZE = 32;
-const CONFIG_VERSION = 12;
+const CONFIG_VERSION = 13;
 const VENDOR_ID = 0xCAFE;
 const PRODUCT_ID = 0xBAF2;
 const DEFAULT_PARTIAL_SCROLL_TIMEOUT = 1000000;
@@ -100,6 +100,8 @@ const ops = {
 }
 
 const opcodes = Object.fromEntries(Object.entries(ops).map(([key, value]) => [value, key]));
+
+const expr_re = /((?:\/\*.*?\*\/)?)((?:(?!\/\*).)*)/gs;
 
 const UINT8 = Symbol('uint8');
 const UINT16 = Symbol('uint16');
@@ -601,7 +603,7 @@ function set_expressions_ui_state() {
         }
 
         const expression_input = document.getElementById('expression_' + expr_i).querySelector('.expression_input');
-        const expression_text = expr.split(/\s+/).map(json_to_ui).join(' ').replace(/( )?\n /g, '\n');
+        const expression_text = [...expr.matchAll(expr_re).map(x => x[1]+x[2].split(/\s+/).map(json_to_ui).join(' ').replace(/( )?\n /g, '\n'))].join('');
         expression_input.value = expression_text;
 
         const eols = expression_text.match(/\n/g);
@@ -862,7 +864,7 @@ function add_crc(data) {
 }
 
 function check_json_version(config_version) {
-    if (!([3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(config_version))) {
+    if (!([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].includes(config_version))) {
         throw new Error("Incompatible version.");
     }
 }
@@ -878,7 +880,7 @@ async function check_device_version() {
     // device because it could be version X, ignore our GET_CONFIG call with version Y and
     // just happen to have Y at the right place in the buffer from some previous call done
     // by some other software.
-    for (const version of [CONFIG_VERSION, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]) {
+    for (const version of [CONFIG_VERSION, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]) {
         await send_feature_command(GET_CONFIG, [], version);
         const [received_version] = await read_config_feature([UINT8]);
         if (received_version == version) {
@@ -950,6 +952,9 @@ function layer_checkbox_onchange(mapping, element, layer) {
 
 function expression_onchange(i) {
     const ui_to_json = function (op) {
+        if (op.startsWith('/*')) {
+            return op;
+        }
         if (op.toLowerCase().startsWith('0x')) {
             if (isNaN(parseInt(op, 16))) {
                 throw new Error('Invalid expression: "' + op + '"');
@@ -973,7 +978,10 @@ function expression_onchange(i) {
         const expr_input = document.getElementById('expression_' + i).querySelector('.expression_input');
         try {
             config['expressions'][i] =
-                expr_input.value.replace(/\n/g, " eol ").split(/\s+/).filter((x) => (x.length > 0)).map(ui_to_json).join(' ');
+                [...expr_input.value.matchAll(expr_re).map(x => [
+                    x[1],
+                    ...x[2].replace(/\n/g, " eol ").split(/\s+/)
+                ])].flat().filter((x) => (x.length > 0)).map(ui_to_json).join(' ');
             expr_input.classList.remove('is-invalid');
         } catch (e) {
             expr_input.classList.add('is-invalid');
@@ -1401,7 +1409,7 @@ function expr_to_elems(expr) {
         throw new Error('Invalid expression: "' + elem + '"');
     }
 
-    return expr.split(/\s+/).filter((x) => (x.length > 0)).map(convert_elem);
+    return [...expr.matchAll(expr_re).map(x => x[2])].join('').split(/\s+/).filter((x) => (x.length > 0)).map(convert_elem);
 }
 
 function validate_ui_expressions() {
@@ -1451,12 +1459,13 @@ function update_monitor_ui(usage, value, hub_port) {
 
     element.querySelector('.monitor_last_value').innerText = value;
     element.classList.add('bg-light');
-    if (!(usage in monitor_min_val) || (value < monitor_min_val[usage])) {
-        monitor_min_val[usage] = value;
+    const key = usage + '_' + hub_port;
+    if (!(key in monitor_min_val) || (value < monitor_min_val[key])) {
+        monitor_min_val[key] = value;
         element.querySelector('.monitor_min_value').innerText = value;
     }
-    if (!(usage in monitor_max_val) || (value > monitor_max_val[usage])) {
-        monitor_max_val[usage] = value;
+    if (!(key in monitor_max_val) || (value > monitor_max_val[key])) {
+        monitor_max_val[key] = value;
         element.querySelector('.monitor_max_value').innerText = value;
     }
 }

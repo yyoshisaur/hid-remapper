@@ -657,6 +657,116 @@ const examples = [
         }
     },
     {
+        'description': 'scroll wheel smoothly adjusts DPI',
+        'config': {
+            "version": 13,
+            "unmapped_passthrough_layers": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            "partial_scroll_timeout": 1000000,
+            "tap_hold_threshold": 200000,
+            "gpio_debounce_time_ms": 5,
+            "interval_override": 0,
+            "our_descriptor_number": 0,
+            "ignore_auth_dev_inputs": false,
+            "macro_entry_duration": 1,
+            "gpio_output_mode": 0,
+            "mappings": [
+                {
+                    "target_usage": "0x00010030",
+                    "source_usage": "0xfff30002",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010031",
+                    "source_usage": "0xfff30003",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00000000",
+                    "source_usage": "0x00010038",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                }
+            ],
+            "macros": [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            "expressions": [
+                "1000 recall /* register 1 is current scaling factor */ eol dup 0 eq add /* on startup it's 0, so make it 1 */ eol eol 0x00010038 input_state /* scroll wheel */ eol 1000 eq /* if scroll up */ eol 1100 mul /* increase scaling factor */ eol 0x00010038 input_state /* scroll wheel */ eol -1000 eq /* if scroll down */ eol 900 mul /* decrease scaling factor */ eol add eol dup 0 eq add /* if result is 0, make it 1, meaning no change */ eol eol mul /* multiply scaling factor by either 1.1, 0.9, or 1.0 */ eol 100 10000 clamp /* restrict scaling factor to 0.1-10 range */ eol 1000 store /* put result back in register 1 */ eol eol /*\nFor real-life use we'd want the scaling factor to max out at 1\nand set the hardware mouse DPI to maximum instead.\nBut for demonstration purposes this will do.\n*/",
+                "0x00010030 input_state /* raw mouse X */ eol 1000 recall /* current scaling factor */ eol mul eol /* result used as mouse X */",
+                "0x00010031 input_state /* raw mouse Y */ eol 1000 recall /* current scaling factor */ eol mul eol /* result used as mouse Y */",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "quirks": []
+        }
+    },
+    {
         'description': 'macros: double-click and "Hello, world!"',
         'config': {
             "version": 5,
@@ -4256,6 +4366,1178 @@ const examples = [
                     "signed": true
                 }
             ]
+        }
+    },
+    {
+        'description': 'DualSense gyro mouse',
+        'config': {
+            "version": 13,
+            "unmapped_passthrough_layers": [],
+            "partial_scroll_timeout": 1000000,
+            "tap_hold_threshold": 200000,
+            "gpio_debounce_time_ms": 5,
+            "interval_override": 0,
+            "our_descriptor_number": 1,
+            "ignore_auth_dev_inputs": false,
+            "macro_entry_duration": 20,
+            "gpio_output_mode": 0,
+            "mappings": [
+                {
+                    "target_usage": "0x00010030",
+                    "source_usage": "0xfff50001",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010031",
+                    "source_usage": "0xfff50002",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090001",
+                    "source_usage": "0x00090002",
+                    "source_name": "Cross",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090002",
+                    "source_usage": "0x00090003",
+                    "source_name": "Circle",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090001",
+                    "source_usage": "0x00090006",
+                    "source_name": "R1",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090002",
+                    "source_usage": "0x00090005",
+                    "source_name": "L1",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0xfff20001",
+                    "source_usage": "0x00090001",
+                    "source_name": "Square",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010038",
+                    "source_usage": "0xfff30003",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0xfff10001",
+                    "source_usage": "0x0009000d",
+                    "source_name": "PS",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": true,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                }
+            ],
+            "macros": [
+                [
+                    [
+                        "0x00090001"
+                    ],
+                    [],
+                    [
+                        "0x00090001"
+                    ]
+                ],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            "expressions": [
+                "0xfffa000a input_state /* gyro second axis */ eol -32 mul eol /* don't move if R1 pressed to avoid accidental drags */ eol 0x00090006 input_state_binary not mul eol /* don't move if not on layer 0 */ eol layer_state 1 eq mul eol 0x00010030 input_state /* left stick X */ eol -128000 add /* recenter around zero */ eol dup abs 20000 gt mul /* deadzone */ eol 135 mul eol add eol 1000 recall /* absolute cursor position X */ eol add eol 0 32767000 clamp eol 0x00090004 input_state_binary not mul eol 16384000 eol 0x00090004 input_state_binary mul /* triangle recenters cursor */ eol add eol 1000 store /* used as output absolute mouse X */",
+                "0xfffa0009 input_state /* gyro first axis */ eol -32 mul eol /* don't move if R1 pressed to avoid accidental drags */ eol 0x00090006 input_state_binary not mul eol /* don't move if not on layer 0 */ eol layer_state 1 eq mul eol 0x00010031 input_state /* left stick Y */ eol -128000 add /* recenter around zero */ eol dup abs 20000 gt mul /* deadzone */ eol 240 mul eol add eol 2000 recall /* absolute cursor position Y */ eol add eol 0 32767000 clamp eol 0x00090004 input_state_binary not mul eol 16384000 eol 0x00090004 input_state_binary mul /* triangle recenters cursor */ eol add eol 2000 store /* used as output absolute mouse Y */",
+                "0x00010035 input_state /* right stick Y */ eol -128000 add /* recenter around zero */ eol dup eol abs 20000 gt mul /* deadzone */ eol -1 mul /* scale */ eol 200 mul eol /* result used for vertical scroll */",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "quirks": [
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xff000020",
+                    "bitpos": 0,
+                    "size": 0,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xff000022",
+                    "bitpos": 0,
+                    "size": 0,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0001",
+                    "bitpos": 256,
+                    "size": 7,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0002",
+                    "bitpos": 263,
+                    "size": 1,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0003",
+                    "bitpos": 264,
+                    "size": 12,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0004",
+                    "bitpos": 276,
+                    "size": 12,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0005",
+                    "bitpos": 288,
+                    "size": 7,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0006",
+                    "bitpos": 295,
+                    "size": 1,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0007",
+                    "bitpos": 296,
+                    "size": 12,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0008",
+                    "bitpos": 308,
+                    "size": 12,
+                    "relative": false,
+                    "signed": false
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa0009",
+                    "bitpos": 120,
+                    "size": 16,
+                    "relative": false,
+                    "signed": true
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa000a",
+                    "bitpos": 136,
+                    "size": 16,
+                    "relative": false,
+                    "signed": true
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa000b",
+                    "bitpos": 152,
+                    "size": 16,
+                    "relative": false,
+                    "signed": true
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa000c",
+                    "bitpos": 168,
+                    "size": 16,
+                    "relative": false,
+                    "signed": true
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa000d",
+                    "bitpos": 184,
+                    "size": 16,
+                    "relative": false,
+                    "signed": true
+                },
+                {
+                    "vendor_id": "0x054c",
+                    "product_id": "0x0ce6",
+                    "interface": 3,
+                    "report_id": 1,
+                    "usage": "0xfffa000e",
+                    "bitpos": 200,
+                    "size": 16,
+                    "relative": false,
+                    "signed": true
+                }
+            ]
+        }
+    },
+    {
+        'description': '5-key chording keyboard (A-S-D-F-space)',
+        'config': {
+            "version": 13,
+            "unmapped_passthrough_layers": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            "partial_scroll_timeout": 1000000,
+            "tap_hold_threshold": 200000,
+            "gpio_debounce_time_ms": 5,
+            "interval_override": 0,
+            "our_descriptor_number": 0,
+            "ignore_auth_dev_inputs": false,
+            "macro_entry_duration": 1,
+            "gpio_output_mode": 0,
+            "mappings": [
+                {
+                    "source_usage": "0xfff50001",
+                    "target_usage": "0x00070004",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50002",
+                    "target_usage": "0x00070005",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50003",
+                    "target_usage": "0x00070006",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50004",
+                    "target_usage": "0x00070007",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50005",
+                    "target_usage": "0x00070008",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50006",
+                    "target_usage": "0x00070009",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50007",
+                    "target_usage": "0x0007000a",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50008",
+                    "target_usage": "0x0007000b",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50009",
+                    "target_usage": "0x0007000c",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000a",
+                    "target_usage": "0x0007000d",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000b",
+                    "target_usage": "0x0007000e",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000c",
+                    "target_usage": "0x0007000f",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000d",
+                    "target_usage": "0x00070010",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000e",
+                    "target_usage": "0x00070011",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000f",
+                    "target_usage": "0x00070012",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50010",
+                    "target_usage": "0x00070013",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50011",
+                    "target_usage": "0x00070014",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50012",
+                    "target_usage": "0x00070015",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50013",
+                    "target_usage": "0x00070016",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50014",
+                    "target_usage": "0x00070017",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50015",
+                    "target_usage": "0x00070018",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50016",
+                    "target_usage": "0x00070019",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50017",
+                    "target_usage": "0x0007001a",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50018",
+                    "target_usage": "0x0007001b",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50019",
+                    "target_usage": "0x0007001c",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001a",
+                    "target_usage": "0x0007001d",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001b",
+                    "target_usage": "0x00070036",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001c",
+                    "target_usage": "0x00070037",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001d",
+                    "target_usage": "0x00070033",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001e",
+                    "target_usage": "0x000700e1",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001e",
+                    "target_usage": "0x00070038",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001f",
+                    "target_usage": "0x0007002c",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                }
+            ],
+            "macros": [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            "expressions": [
+                "/*\nRegister 32 accumulates all the keys that were pressed during\nthe current chord. They are stored on individual bits.\n*/ eol 32000 recall eol 0x0007002c input_state_binary /* space */ eol 1 mul bitwise_or eol 0x00070009 input_state_binary /* F */ eol 2 mul bitwise_or eol 0x00070007 input_state_binary /* D */ eol 4 mul bitwise_or eol 0x00070016 input_state_binary /* S */ eol 8 mul bitwise_or eol 0x00070004 input_state_binary /* A */ eol 16 mul bitwise_or eol 32000 store eol eol /* detect if a chord has just ended */ eol /* check if any of the keys were pressed last frame */ eol 0x0007002c prev_input_state_binary eol 0x00070009 prev_input_state_binary bitwise_or eol 0x00070007 prev_input_state_binary bitwise_or eol 0x00070016 prev_input_state_binary bitwise_or eol 0x00070004 prev_input_state_binary bitwise_or eol /* and if any are pressed this frame */ eol 0x0007002c input_state_binary eol 0x00070009 input_state_binary bitwise_or eol 0x00070007 input_state_binary bitwise_or eol 0x00070016 input_state_binary bitwise_or eol 0x00070004 input_state_binary bitwise_or eol gt /* some keys were pressed last frame but no longer are */ eol /* if so... */ eol dup eol 32000 recall eol mul eol 31000 store /* ... copy value from register 32 to register 31... */ eol not eol 32000 recall mul eol 32000 store /* ... and reset register 32 to zero */ eol eol /* set registers 1-31 according to the key mask */ eol /* they are then used in mappings */ eol 31000 recall 1 eq 1000 store eol 31000 recall 2 eq 2000 store eol 31000 recall 3 eq 3000 store eol 31000 recall 4 eq 4000 store eol 31000 recall 5 eq 5000 store eol 31000 recall 6 eq 6000 store eol 31000 recall 7 eq 7000 store eol 31000 recall 8 eq 8000 store eol 31000 recall 9 eq 9000 store eol 31000 recall 10 eq 10000 store eol 31000 recall 11 eq 11000 store eol 31000 recall 12 eq 12000 store eol 31000 recall 13 eq 13000 store eol 31000 recall 14 eq 14000 store eol 31000 recall 15 eq 15000 store eol 31000 recall 16 eq 16000 store eol 31000 recall 17 eq 17000 store eol 31000 recall 18 eq 18000 store eol 31000 recall 19 eq 19000 store eol 31000 recall 20 eq 20000 store eol 31000 recall 21 eq 21000 store eol 31000 recall 22 eq 22000 store eol 31000 recall 23 eq 23000 store eol 31000 recall 24 eq 24000 store eol 31000 recall 25 eq 25000 store eol 31000 recall 26 eq 26000 store eol 31000 recall 27 eq 27000 store eol 31000 recall 28 eq 28000 store eol 31000 recall 29 eq 29000 store eol 31000 recall 30 eq 30000 store eol /* register 31 was used to store the chord mask */ eol /* but now we re-use it as an output register */ eol 31000 recall 31 eq 31000 store",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "quirks": []
+        }
+    },
+    {
+        'description': 'Two mice, two cursors',
+        'config': {
+            "version": 13,
+            "unmapped_passthrough_layers": [
+                4,
+                5,
+                6,
+                7
+            ],
+            "partial_scroll_timeout": 1000000,
+            "tap_hold_threshold": 200000,
+            "gpio_debounce_time_ms": 5,
+            "interval_override": 0,
+            "our_descriptor_number": 1,
+            "ignore_auth_dev_inputs": false,
+            "macro_entry_duration": 1,
+            "gpio_output_mode": 0,
+            "mappings": [
+                {
+                    "target_usage": "0x00010030",
+                    "source_usage": "0xfff50005",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010031",
+                    "source_usage": "0xfff50006",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0x00090001",
+                    "target_usage": "0x00090001",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0x00090002",
+                    "target_usage": "0x00090002",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0x00090003",
+                    "target_usage": "0x00090003",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                }
+            ],
+            "macros": [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            "expressions": [
+                "/*\nregister 1 = mouse 1 absolute cursor position X\nregister 2 = mouse 1 absolute cursor position Y\nregister 3 = mouse 2 absolute cursor position X\nregister 4 = mouse 2 absolute cursor position Y\n*/ eol eol 1000 port 0x00010030 input_state /* mouse 1 X delta */ eol 9000 mul eol 1000 recall /* mouse 1 absolute X position */ eol add eol 0 32767000 clamp eol 1000 store eol eol 1000 port 0x00010031 input_state /* mouse 1 Y delta */ eol 16000 mul eol 2000 recall /* mouse 1 absolute Y position */ eol add eol 0 32767000 clamp eol 2000 store eol eol 2000 port 0x00010030 input_state /* mouse 2 X delta */ eol 9000 mul eol 3000 recall /* mouse 2 absolute X position */ eol add eol 0 32767000 clamp eol 3000 store eol eol 2000 port 0x00010031 input_state /* mouse 2 Y delta */ eol 16000 mul eol 4000 recall /* mouse 2 absolute Y position */ eol add eol 0 32767000 clamp eol 4000 store",
+                "/*\nregister 7 = 0 : cursor oscillates between mouse 1 and mouse 2\nregister 7 = 1 : mouse 1 owns the cursor\nregister 7 = 2 : mouse 2 owns the cursor\n*/ eol eol 1000 port 0x00090001 input_state_binary /* mouse 1 left button */ eol 0x00090002 input_state_binary /* mouse 1 right button */ eol bitwise_or eol 0x00090003 input_state_binary /* mouse 1 middle button */ eol bitwise_or eol 7000 store /* set to 1 if any button pressed on mouse 1 */ eol eol 2000 port 0x00090001 input_state_binary /* mouse 2 left button */ eol 0x00090002 input_state_binary /* mouse 2 right button */ eol bitwise_or eol 0x00090003 input_state_binary /* mouse 2 middle button */ eol bitwise_or eol 2000 mul eol 7000 recall not /* check if not already owned by mouse 1 */ eol mul eol 7000 recall eol add eol 7000 store /* set to 2 if any button pressed on mouse 2 */ eol",
+                "time 100000 mod 50000 gt /* this is 1 50% of the time */ eol 7000 recall 0 eq /* we're oscillating between the two mice */ eol mul eol 7000 recall 1000 eq /* mouse 1 owns cursor */ eol bitwise_or /* mouse 1 owns cursor or it's their turn */ eol 1000 recall /* mouse 1 absolute X position */ eol mul eol eol time 100000 mod 50000 gt not /* this is 1 the other 50% of the time */ eol 7000 recall 0 eq /* we're oscillating between the two mice */ eol mul eol 7000 recall 2000 eq /* mouse 2 owns cursor */ eol bitwise_or /* mouse 2 owns cursor or it's their turn */ eol 3000 recall /* mouse 2 absolute X position */ eol mul eol eol add eol 5000 store /* used as output mouse X absolute position */ eol eol time 100000 mod 50000 gt /* this is 1 50% of the time */ eol 7000 recall 0 eq /* we're oscillating between the two mice */ eol mul eol 7000 recall 1000 eq /* mouse 1 owns cursor */ eol bitwise_or /* mouse 1 owns cursor or it's their turn */ eol 2000 recall /* mouse 1 absolute Y position */ eol mul eol eol time 100000 mod 50000 gt not /* this is 1 the other 50% of the time */ eol 7000 recall 0 eq /* we're oscillating between the two mice */ eol mul eol 7000 recall 2000 eq /* mouse 2 owns cursor */ eol bitwise_or /* mouse 2 owns cursor or it's their turn */ eol 4000 recall /* mouse 2 absolute Y position */ eol mul eol eol add eol 6000 store /* used as output mouse Y absolute position */",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "quirks": []
+        }
+    },
+    {
+        'description': '"warpd": keyboard-driven, grid-based mouse positioning',
+        'config': {
+            "version": 13,
+            "unmapped_passthrough_layers": [
+                0,
+                4,
+                5,
+                6,
+                7
+            ],
+            "partial_scroll_timeout": 1000000,
+            "tap_hold_threshold": 200000,
+            "gpio_debounce_time_ms": 5,
+            "interval_override": 0,
+            "our_descriptor_number": 1,
+            "ignore_auth_dev_inputs": false,
+            "macro_entry_duration": 1,
+            "gpio_output_mode": 0,
+            "mappings": [
+                {
+                    "target_usage": "0x00010030",
+                    "source_usage": "0xfff50005",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010031",
+                    "source_usage": "0xfff50006",
+                    "scaling": 1000,
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50007",
+                    "target_usage": "0xfff10001",
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0x00070039",
+                    "target_usage": "0x00000000",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50008",
+                    "target_usage": "0x00090001",
+                    "layers": [
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50009",
+                    "target_usage": "0x00090003",
+                    "layers": [
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000a",
+                    "target_usage": "0x00090002",
+                    "layers": [
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50007",
+                    "target_usage": "0x00080002",
+                    "layers": [
+                        0,
+                        1
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                }
+            ],
+            "macros": [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            "expressions": [
+                "/*\nregister 1: current grid region X lower bound\nregister 2: current grid region X upper bound\nregister 3: current grid region Y lower bound\nregister 4: current grid region Y upper bound\nregister 5: output absolute cursor X\nregister 6: output absolute cursor Y\nregister 7 = 0 : inactive (keyboard works as keyboard)\nregister 7 = 1 : grid mode (UIJK selects quarters)\nregister 7 = 2 : normal mode (HJKL moves cursor directly)\nregister 8: left button\nregister 9: middle button\nregister 10: right button\nregister 11: drag-lock\n*/ eol eol 0x00070039 input_state_binary /* caps lock */ eol 0x00070039 prev_input_state_binary not eol mul eol 32000 store /* caps lock has just been pressed */ eol eol /* if caps lock has just been pressed, reset bounds */ eol eol 0 32000 recall mul /* reset if caps lock just pressed */ eol 1000 recall 32000 recall not mul /* keep current if not */ eol add eol 1000 store /* X lower bound */ eol eol 32767000 32000 recall mul /* reset if caps lock just pressed */ eol 2000 recall 32000 recall not mul /* keep current if not */ eol add eol 2000 store /* X upper bound */ eol eol 0 32000 recall mul /* reset if caps lock just pressed */ eol 3000 recall 32000 recall not mul /* keep current if not */ eol add eol 3000 store /* Y lower bound */ eol eol 32767000 32000 recall mul /* reset if caps lock just pressed */ eol 4000 recall 32000 recall not mul /* keep current if not */ eol add eol 4000 store /* Y upper bound */ eol eol /* if caps lock just pressed set mode to 1=grid */ eol 32000 recall 1000 mul eol 32000 recall not 7000 recall mul /* if not keep mode */ eol add eol 0x00070029 prev_input_state_binary /* esc */ eol 0x00070029 input_state_binary not eol mul /* esc just released */ eol not eol mul /* if esc just released, reset mode to 0=inactive */ eol 7000 store /* mode */ eol eol 11000 recall /* drag-lock state */ eol 0x00070019 prev_input_state_binary /* V */ eol 0x00070019 input_state_binary not eol mul /* V was just released */ eol bitwise_or /* drag-lock was already active or V just released */ eol 11000 recall /* drag-lock state */ eol 0x00070019 prev_input_state_binary /* V */ eol 0x00070019 input_state_binary not eol mul /* V was just released */ eol 0x00070010 prev_input_state_binary /* M */ eol 0x00070010 input_state_binary not eol mul /* M was just released */ eol bitwise_or /* V was just released or M was just released */ eol mul /* and drag-lock is active */ eol not /* so deactivate it */ eol mul eol 7000 recall 0 eq not /* not in inactive mode */ eol mul eol 11000 store /* drag-lock */ eol eol 0x00070010 input_state_binary /* M */ eol 0x00070019 input_state_binary /* V */ eol bitwise_or /* M or V currently pressed */ eol dup eol 11000 recall /* drag-lock state */ eol bitwise_or /* drag-lock active or M or V currently pressed */ eol 8000 store /* used as left mouse button */ eol 0x00070036 input_state_binary /* , */ eol dup eol 9000 store /* used as middle mouse button */ eol bitwise_or /* M or V or \",\" currently pressed */ eol 0x00070037 input_state_binary /* . */ eol dup eol 10000 store /* used as right mouse button */ eol bitwise_or /* M or V or \",\" or \".\" currently pressed */ eol 0x0007000b input_state_binary /* H */ eol bitwise_or eol 0x0007000f input_state_binary /* L */ eol bitwise_or eol 0x00070011 input_state_binary /* N */ eol bitwise_or /* M, V, \",\", \".\", H, L or N currently pressed */ eol 7000 recall 0 eq not /* not in inactive mode */ eol mul eol dup eol 31000 store /* not inactive and one of the keys above pressed */ eol 2000 mul /* set mode to 2=normal (HJKL moves cursor) */ eol 31000 recall not 7000 recall mul /* keep current mode otherwise */ eol add eol 7000 store /* mode */",
+                "/* move to top-left quarter */ eol 0x00070018 input_state_binary /* U */ eol 0x00070018 prev_input_state_binary not eol mul eol 30000 store /* U just pressed */ eol eol /* upper_bound = 0.5*(lower_bound+upper_bound) */ eol 1000 recall 2000 recall add eol 500 mul eol 30000 recall mul /* if U just pressed */ eol 2000 recall 30000 recall not mul /* keep current otherwise */ eol add eol 2000 store /* X upper bound */ eol eol /* upper_bound = 0.5*(lower_bound+upper_bound) */ eol 3000 recall 4000 recall add eol 500 mul eol 30000 recall mul /* if U just pressed */ eol 4000 recall 30000 recall not mul /* keep current otherwise */ eol add eol 4000 store /* Y upper bound */ eol eol /* move to top-right quarter */ eol 0x0007000c input_state_binary /* I */ eol 0x0007000c prev_input_state_binary not eol mul eol 29000 store /* I just pressed */ eol eol /* lower_bound = 0.5*(lower_bound+upper_bound) */ eol 1000 recall 2000 recall add eol 500 mul eol 29000 recall mul /* if I just pressed */ eol 1000 recall 29000 recall not mul /* keep current otherwise */ eol add eol 1000 store /* X lower bound */ eol eol /* upper_bound = 0.5*(lower_bound+upper_bound) */ eol 3000 recall 4000 recall add eol 500 mul eol 29000 recall mul /* if I just pressed */ eol 4000 recall 29000 recall not mul /* keep current otherwise */ eol add eol 4000 store /* Y upper bound */ eol eol /* move to bottom-left quarter */ eol 0x0007000d input_state_binary /* J */ eol 0x0007000d prev_input_state_binary not eol mul eol 28000 store /* J just pressed */ eol eol /* upper_bound = 0.5*(lower_bound+upper_bound) */ eol 1000 recall 2000 recall add eol 500 mul eol 28000 recall mul /* if J just pressed */ eol 2000 recall 28000 recall not mul /* keep current otherwise */ eol add eol 2000 store /* X upper bound */ eol eol /* lower_bound = 0.5*(lower_bound+upper_bound) */ eol 3000 recall 4000 recall add eol 500 mul eol 28000 recall mul /* if J just pressed */ eol 3000 recall 28000 recall not mul /* keep current otherwise */ eol add eol 3000 store /* Y lower bound */ eol eol /* move to bottom-right quarter */ eol 0x0007000e input_state_binary /* K */ eol 0x0007000e prev_input_state_binary not eol mul eol 27000 store /* K just pressed */ eol eol /* lower_bound = 0.5*(lower_bound+upper_bound) */ eol 1000 recall 2000 recall add eol 500 mul eol 27000 recall mul /* if K just pressed */ eol 1000 recall 27000 recall not mul /* keep current otherwise */ eol add eol 1000 store /* X lower bound */ eol eol /* lower_bound = 0.5*(lower_bound+upper_bound) */ eol 3000 recall 4000 recall add eol 500 mul eol 27000 recall mul /* if K just pressed */ eol 3000 recall 27000 recall not mul /* keep current otherwise */ eol add eol 3000 store /* Y lower bound */",
+                "/* absolute cursor X position */ eol 7000 recall 1000 eq not /* if not grid mode */ eol 5000 recall mul /* start with current position, zero otherwise */ eol eol 7000 recall 2000 eq /* \"normal\" mode - HJKL moves cursor */ eol 0x0007000b input_state_binary /* H */ eol -2250 mul eol 0x0007000f input_state_binary /* L */ eol 2250 mul eol add /* X delta */ eol mul /* use delta if normal mode, zero otherwise */ eol eol add eol eol 7000 recall 1000 eq /* \"grid\" mode - UIJK selects quarters */ eol /* cursor_x = 0.5*(lower_bound+upper_bound) */ eol 1000 recall 2000 recall add eol 500 mul eol mul /* use if we're in grid mode, zero otherwise */ eol eol add eol eol 0 32767000 clamp eol 5000 store /* used as output absolute mouse X */",
+                "/* absolute cursor Y position */ eol 7000 recall 1000 eq not /* if not grid mode */ eol 6000 recall mul /* start with current position, zero otherwise */ eol eol 7000 recall 2000 eq /* \"normal\" mode - HJKL moves cursor */ eol 0x0007000d input_state_binary /* J */ eol 4000 mul eol 0x0007000e input_state_binary /* K */ eol -4000 mul eol add /* Y delta */ eol mul /* use delta if normal mode, zero otherwise */ eol eol add eol eol 7000 recall 1000 eq /* \"grid\" mode - UIJK selects quarters */ eol /* cursor_y = 0.5*(lower_bound+upper_bound) */ eol 3000 recall 4000 recall add eol 500 mul eol mul /* use if we're in grid mode, zero otherwise */ eol eol add eol eol 0 32767000 clamp eol 6000 store /* used as output absolute mouse Y */",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "quirks": []
         }
     }
 ];

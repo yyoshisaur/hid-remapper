@@ -2,6 +2,7 @@ import hid
 import binascii
 import struct
 import itertools
+import re
 
 VENDOR_ID = 0xCAFE
 PRODUCT_ID = 0xBAF2
@@ -9,7 +10,7 @@ PRODUCT_ID = 0xBAF2
 CONFIG_USAGE_PAGE = 0xFF00
 CONFIG_USAGE = 0x0020
 
-CONFIG_VERSION = 12
+CONFIG_VERSION = 13
 CONFIG_SIZE = 32
 REPORT_ID_CONFIG = 100
 
@@ -158,4 +159,4 @@ def convert_elem(elem):
 
 
 def expr_to_elems(expr):
-    return [convert_elem(x) for x in expr.split()]
+    return [convert_elem(x) for x in re.sub(r"(?s)/\*.*?\*/", " ", expr).split()]

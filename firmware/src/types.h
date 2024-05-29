@@ -125,6 +125,8 @@ struct out_usage_def_t {
     uint16_t len;
     uint8_t size;
     uint16_t bitpos;
+    uint8_t array_count;
+    uint32_t array_index;
 };
 
 struct reverse_mapping_t {
@@ -278,7 +280,9 @@ struct __attribute__((packed)) persist_config_v12_t {
     uint16_t quirk_count;
 };
 
-typedef persist_config_v12_t persist_config_t;
+typedef persist_config_v12_t persist_config_v13_t;
+
+typedef persist_config_v13_t persist_config_t;
 
 struct __attribute__((packed)) get_config_t {
     uint8_t version;
@@ -384,6 +388,10 @@ struct __attribute__((packed)) monitor_report_item_t {
 struct __attribute__((packed)) monitor_report_t {
     uint8_t report_id;
     monitor_report_item_t items[7];
+};
+
+struct __attribute__((packed)) uint16_val_t {
+    uint16_t val;
 };
 
 #endif
