@@ -565,6 +565,17 @@ void set_mapping_from_config() {
             .hub_port = hub_port,
             .sources = sources,
         };
+        if (our_descriptor->default_value != nullptr) {
+            rev_map.default_value = our_descriptor->default_value(target);
+            // This helps in cases where nothing is plugged in to provide state for a source
+            // and a default of zero is not good, but the proper way to solve this would be
+            // to not execute mappings with unplugged sources.
+            for (auto const& source : sources) {
+                if (!source.sticky && !source.tap && !source.hold && (source.scaling == 1000)) {
+                    *(source.input_state) = rev_map.default_value;
+                }
+            }
+        }
         if ((target & 0xFFFF0000) == GPIO_USAGE_PAGE) {
             rev_map.our_usages.push_back((out_usage_def_t){
                 .data = gpio_out_state,
@@ -1004,17 +1015,17 @@ void process_mapping(bool auto_repeat) {
                 }
             }
         } else {  // our_usage is absolute
-            int32_t value = 0;
+            int32_t value = rev_map.default_value;
             for (auto const& map_source : rev_map.sources) {
                 if (map_source.sticky) {
                     if (*map_source.sticky_state & map_source.layer_mask) {
-                        value = 1;
+                        value = 1 * map_source.scaling / 1000;
                     }
                 } else {
                     if ((layer_state_mask & map_source.layer_mask)) {
                         if ((map_source.tap && map_source.tap_hold_state->tap) ||
                             (map_source.hold && map_source.tap_hold_state->hold)) {
-                            value = 1;
+                            value = 1 * map_source.scaling / 1000;
                         }
                         if (!map_source.tap && !map_source.hold) {
                             if (map_source.is_relative) {
@@ -1022,15 +1033,18 @@ void process_mapping(bool auto_repeat) {
                                     value = 1;
                                 }
                             } else {
-                                if (*map_source.input_state) {
-                                    value = *map_source.input_state;
+                                if ((*map_source.input_state != 0) || (rev_map.default_value != 0)) {
+                                    int32_t candidate = *map_source.input_state;
                                     if (map_source.is_binary) {
-                                        value = !!value;
+                                        candidate = !!candidate;
                                     }
-                                    value = (int64_t) value * map_source.scaling / 1000;
+                                    candidate = (int64_t) candidate * map_source.scaling / 1000;
                                     if (((map_source.usage & 0xFFFF0000) == EXPR_USAGE_PAGE) ||
                                         ((map_source.usage & 0xFFFF0000) == REGISTER_USAGE_PAGE)) {
-                                        value /= 1000;
+                                        candidate /= 1000;
+                                    }
+                                    if (candidate != rev_map.default_value) {
+                                        value = candidate;
                                     }
                                 }
                             }
@@ -1038,10 +1052,10 @@ void process_mapping(bool auto_repeat) {
                     }
                 }
             }
-            if (value) {
+            if (value != rev_map.default_value) {
                 for (auto const& out_usage_def : rev_map.our_usages) {
                     if (out_usage_def.array_count == 0) {
-                        uint32_t effective_value = out_usage_def.size == 1 ? 1 : value;
+                        uint32_t effective_value = out_usage_def.size == 1 ? !!value : value;
                         put_bits(out_usage_def.data, out_usage_def.len, out_usage_def.bitpos, out_usage_def.size, effective_value);
                     } else {  // array range
                         for (int i = 0; i < out_usage_def.array_count; i++) {
@@ -1125,6 +1139,9 @@ void process_mapping(bool auto_repeat) {
 
     for (unsigned int i = 0; i < report_ids.size(); i++) {  // XXX what order should we go in? maybe keyboard first so that mappings to ctrl-left click work as expected?
         uint8_t report_id = report_ids[i];
+        if (our_descriptor->sanitize_report != nullptr) {
+            our_descriptor->sanitize_report(report_id, reports[report_id], report_sizes[report_id]);
+        }
         if (needs_to_be_sent(report_id)) {
             if (or_items == OR_BUFSIZE) {
                 printf("overflow!\n");
@@ -1143,7 +1160,11 @@ void process_mapping(bool auto_repeat) {
                 or_items++;
             }
         }
-        memset(reports[report_id], 0, report_sizes[report_id]);
+        if (our_descriptor->clear_report != nullptr) {
+            our_descriptor->clear_report(reports[report_id], report_id, report_sizes[report_id]);
+        } else {
+            memset(reports[report_id], 0, report_sizes[report_id]);
+        }
     }
 
     for (auto const [interface_report_id, report] : out_reports) {
@@ -1475,8 +1496,8 @@ void rlencode(const std::set<uint64_t>& usage_ranges, std::vector<usage_rle_t>& 
 }
 
 void update_their_descriptor_derivates() {
-    std::unordered_set<uint32_t> relative_usage_set;
-    std::unordered_set<uint32_t> binary_usage_set;
+    std::unordered_set<int32_t*> relative_usage_set;
+    std::unordered_set<int32_t*> binary_usage_set;
     std::set<uint64_t> their_usage_ranges_set;
 
     relative_usages.clear();
@@ -1494,15 +1515,19 @@ void update_their_descriptor_derivates() {
                     their_usage_ranges_set.insert(((uint64_t) usage << 32) | usage);
                     if (usage_def.is_relative) {
                         if (state_ptr_0 != NULL) {
-                            relative_usages.push_back(state_ptr_0);
+                            relative_usage_set.insert(state_ptr_0);
                         }
                         if (state_ptr_n != NULL) {
-                            relative_usages.push_back(state_ptr_n);
+                            relative_usage_set.insert(state_ptr_n);
                         }
-                        relative_usage_set.insert(usage);
                     }
                     if (usage_def.size == 1) {
-                        binary_usage_set.insert(usage);
+                        if (state_ptr_0 != NULL) {
+                            binary_usage_set.insert(state_ptr_0);
+                        }
+                        if (state_ptr_n != NULL) {
+                            binary_usage_set.insert(state_ptr_n);
+                        }
                     }
                     if ((state_ptr_0 != NULL) || (state_ptr_n != NULL)) {
                         usage_def.input_state_0 = state_ptr_0;
@@ -1550,13 +1575,17 @@ void update_their_descriptor_derivates() {
         }
     }
 
+    for (int32_t* ptr : relative_usage_set) {
+        relative_usages.push_back(ptr);
+    }
+
     their_usages_rle.clear();
     rlencode(their_usage_ranges_set, their_usages_rle);
 
     for (auto& rev_map : reverse_mapping) {
         for (auto& map_source : rev_map.sources) {
-            map_source.is_relative = relative_usage_set.count(map_source.usage) > 0;
-            map_source.is_binary = binary_usage_set.count(map_source.usage) > 0;
+            map_source.is_relative = relative_usage_set.count(map_source.input_state) > 0;
+            map_source.is_binary = binary_usage_set.count(map_source.input_state) > 0;
         }
         auto search = their_out_usages_flat.find(rev_map.target);
         if (search != their_out_usages_flat.end()) {
