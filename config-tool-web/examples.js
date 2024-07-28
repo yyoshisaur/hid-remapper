@@ -2470,7 +2470,7 @@ const examples = [
     {
         'description': 'keyboard adapter for PS4: arrows=D-pad, WASD=left stick, numpad=right stick',
         'config': {
-            "version": 12,
+            "version": 14,
             "unmapped_passthrough_layers": [
                 0,
                 1,
@@ -2795,13 +2795,13 @@ const examples = [
                 []
             ],
             "expressions": [
-                "0x00070050 input_state_binary eol 0x0007004f input_state_binary eol 0x00070052 input_state_binary eol 0x00070051 input_state_binary eol dpad",
-                "0x00070004 input_state_binary eol 0x00070007 input_state_binary eol 0x0007001a input_state_binary eol 0x00070016 input_state_binary eol dpad eol 45000 mul eol dup eol 360000 eq not 3000 store eol 4000 store",
-                "4000 recall eol sin eol 127000 mul eol 3000 recall eol mul eol 128000 add",
-                "4000 recall eol cos eol -127000 eol mul eol 3000 recall eol mul eol 128000 add",
-                "0x0007005c input_state_binary eol 0x0007005e input_state_binary eol 0x00070060 input_state_binary eol 0x0007005d input_state_binary eol dpad eol 45000 mul eol dup eol 360000 eq not 6000 store eol 7000 store",
-                "7000 recall eol sin eol 127000 mul eol 6000 recall eol mul eol 128000 add",
-                "7000 recall eol cos eol -127000 mul eol 6000 recall eol mul eol 128000 add",
+                "0x00070050 input_state_binary /* left arrow */ eol 0x0007004f input_state_binary /* right arrow */ eol 0x00070052 input_state_binary /* up arrow */ eol 0x00070051 input_state_binary /* down arrow */ eol dpad /* 0=up, 1=up+right, 2=right, ..., 8=neutral */",
+                "0x00070004 input_state_binary /* A */ eol 0x00070007 input_state_binary /* D */ eol 0x0007001a input_state_binary /* W */ eol 0x00070016 input_state_binary /* S */ eol dpad /* 0=up, 1=up+right, 2=right, ..., 8=neutral */ eol 45000 mul /* angle in degrees */ eol dup eol 360000 eq not 3000 store /* is any of the keys pressed? */ eol 4000 store /* 0..360 angle */",
+                "4000 recall /* 0..360 angle */ eol sin eol 127000 mul eol 3000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as left stick X */",
+                "4000 recall /* 0..360 angle */ eol cos eol -127000 eol mul eol 3000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as left stick Y */",
+                "0x0007005c input_state_binary /* numpad 4 */ eol 0x0007005e input_state_binary /* numpad 6 */ eol 0x00070060 input_state_binary /* numpad 8 */ eol 0x0007005d input_state_binary /* numpad 5 */ eol dpad /* 0=up, 1=up+right, 2=right, ..., 8=neutral */ eol 45000 mul /* angle in degrees */ eol dup eol 360000 eq not 6000 store /* is any of the keys pressed? */ eol 7000 store /* 0..360 angle */",
+                "7000 recall /* 0..360 angle */ eol sin eol 127000 mul eol 6000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as right stick X */",
+                "7000 recall /* 0..360 angle */ eol cos eol -127000 mul eol 6000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as right stick Y */",
                 ""
             ],
             "quirks": []
@@ -6282,6 +6282,741 @@ const examples = [
             ],
             "expressions": [
                 "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "quirks": []
+        }
+    },
+    {
+        'description': 'keyboard to XAC adapter: arrows=D-pad, WASD=left stick, numpad=right stick',
+        'config': {
+            "version": 14,
+            "unmapped_passthrough_layers": [],
+            "partial_scroll_timeout": 1000000,
+            "tap_hold_threshold": 200000,
+            "gpio_debounce_time_ms": 5,
+            "interval_override": 0,
+            "our_descriptor_number": 5,
+            "ignore_auth_dev_inputs": false,
+            "macro_entry_duration": 1,
+            "gpio_output_mode": 0,
+            "mappings": [
+                {
+                    "target_usage": "0x00010039",
+                    "source_usage": "0xfff30001",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010030",
+                    "source_usage": "0xfff30003",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010031",
+                    "source_usage": "0xfff30004",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010032",
+                    "source_usage": "0xfff30006",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00010035",
+                    "source_usage": "0xfff30007",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090005",
+                    "source_usage": "0x0007000d",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090006",
+                    "source_usage": "0x0007000e",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x0009000b",
+                    "source_usage": "0x0007000c",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x0009000c",
+                    "source_usage": "0x00070012",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x0009000a",
+                    "source_usage": "0x00070013",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090002",
+                    "source_usage": "0x0007000f",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090004",
+                    "source_usage": "0x0007002f",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090001",
+                    "source_usage": "0x00070033",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090003",
+                    "source_usage": "0x00070009",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090009",
+                    "source_usage": "0x0007000b",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090008",
+                    "source_usage": "0x00070028",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "target_usage": "0x00090007",
+                    "source_usage": "0x0007002a",
+                    "scaling": 1000,
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "source_port": 0,
+                    "target_port": 0
+                }
+            ],
+            "macros": [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            "expressions": [
+                "0x00070050 input_state_binary /* left arrow */ eol 0x0007004f input_state_binary /* right arrow */ eol 0x00070052 input_state_binary /* up arrow */ eol 0x00070051 input_state_binary /* down arrow */ eol dpad /* 0=up, 1=up+right, 2=right, ..., 8=neutral */",
+                "0x00070004 input_state_binary /* A */ eol 0x00070007 input_state_binary /* D */ eol 0x0007001a input_state_binary /* W */ eol 0x00070016 input_state_binary /* S */ eol dpad /* 0=up, 1=up+right, 2=right, ..., 8=neutral */ eol 45000 mul /* angle in degrees */ eol dup eol 360000 eq not 3000 store /* is any of the keys pressed? */ eol 4000 store /* 0..360 angle */",
+                "4000 recall /* 0..360 angle */ eol sin eol 127000 mul eol 3000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as left stick X */",
+                "4000 recall /* 0..360 angle */ eol cos eol -127000 eol mul eol 3000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as left stick Y */",
+                "0x0007005c input_state_binary /* numpad 4 */ eol 0x0007005e input_state_binary /* numpad 6 */ eol 0x00070060 input_state_binary /* numpad 8 */ eol 0x0007005d input_state_binary /* numpad 5 */ eol dpad /* 0=up, 1=up+right, 2=right, ..., 8=neutral */ eol 45000 mul /* angle in degrees */ eol dup eol 360000 eq not 6000 store /* is any of the keys pressed? */ eol 7000 store /* 0..360 angle */",
+                "7000 recall /* 0..360 angle */ eol sin eol 127000 mul eol 6000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as right stick X */",
+                "7000 recall /* 0..360 angle */ eol cos eol -127000 mul eol 6000 recall /* is any of the keys pressed? */ eol mul eol 128000 add eol /* used as right stick Y */",
+                ""
+            ],
+            "quirks": []
+        }
+    },
+    {
+        'description': 'scroll wheel text input, left button accepts letter',
+        'config': {
+            "version": 14,
+            "unmapped_passthrough_layers": [],
+            "partial_scroll_timeout": 1000000,
+            "tap_hold_threshold": 200000,
+            "gpio_debounce_time_ms": 5,
+            "interval_override": 0,
+            "our_descriptor_number": 0,
+            "ignore_auth_dev_inputs": false,
+            "macro_entry_duration": 1,
+            "gpio_output_mode": 0,
+            "mappings": [
+                {
+                    "source_usage": "0xfff50001",
+                    "target_usage": "0x00070004",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50002",
+                    "target_usage": "0x00070005",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50003",
+                    "target_usage": "0x00070006",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50004",
+                    "target_usage": "0x00070007",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50005",
+                    "target_usage": "0x00070008",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50006",
+                    "target_usage": "0x00070009",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50007",
+                    "target_usage": "0x0007000a",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50008",
+                    "target_usage": "0x0007000b",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50009",
+                    "target_usage": "0x0007000c",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000a",
+                    "target_usage": "0x0007000d",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000b",
+                    "target_usage": "0x0007000e",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000c",
+                    "target_usage": "0x0007000f",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000d",
+                    "target_usage": "0x00070010",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000e",
+                    "target_usage": "0x00070011",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5000f",
+                    "target_usage": "0x00070012",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50010",
+                    "target_usage": "0x00070013",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50011",
+                    "target_usage": "0x00070014",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50012",
+                    "target_usage": "0x00070015",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50013",
+                    "target_usage": "0x00070016",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50014",
+                    "target_usage": "0x00070017",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50015",
+                    "target_usage": "0x00070018",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50016",
+                    "target_usage": "0x00070019",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50017",
+                    "target_usage": "0x0007001a",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50018",
+                    "target_usage": "0x0007001b",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff50019",
+                    "target_usage": "0x0007001c",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001a",
+                    "target_usage": "0x0007001d",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001b",
+                    "target_usage": "0x0007002c",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0xfff5001c",
+                    "target_usage": "0x0007002a",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0x00090003",
+                    "target_usage": "0x0007002a",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                },
+                {
+                    "source_usage": "0x00090002",
+                    "target_usage": "0x00070028",
+                    "layers": [
+                        0
+                    ],
+                    "sticky": false,
+                    "tap": false,
+                    "hold": false,
+                    "scaling": 1000,
+                    "source_port": 0,
+                    "target_port": 0
+                }
+            ],
+            "macros": [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            "expressions": [
+                "/*\nif register 31 is 1, emit currently selected letter,\nwhich is stored in register 32\n*/ eol 32000 recall 0 eq 31000 recall mul 27000 store /* space */ eol 32000 recall 1000 eq 31000 recall mul 1000 store /* A */ eol 32000 recall 2000 eq 31000 recall mul 2000 store /* B */ eol 32000 recall 3000 eq 31000 recall mul 3000 store /* C */ eol 32000 recall 4000 eq 31000 recall mul 4000 store eol 32000 recall 5000 eq 31000 recall mul 5000 store eol 32000 recall 6000 eq 31000 recall mul 6000 store eol 32000 recall 7000 eq 31000 recall mul 7000 store eol 32000 recall 8000 eq 31000 recall mul 8000 store eol 32000 recall 9000 eq 31000 recall mul 9000 store eol 32000 recall 10000 eq 31000 recall mul 10000 store eol 32000 recall 11000 eq 31000 recall mul 11000 store eol 32000 recall 12000 eq 31000 recall mul 12000 store eol 32000 recall 13000 eq 31000 recall mul 13000 store eol 32000 recall 14000 eq 31000 recall mul 14000 store eol 32000 recall 15000 eq 31000 recall mul 15000 store eol 32000 recall 16000 eq 31000 recall mul 16000 store eol 32000 recall 17000 eq 31000 recall mul 17000 store eol 32000 recall 18000 eq 31000 recall mul 18000 store eol 32000 recall 19000 eq 31000 recall mul 19000 store eol 32000 recall 20000 eq 31000 recall mul 20000 store eol 32000 recall 21000 eq 31000 recall mul 21000 store eol 32000 recall 22000 eq 31000 recall mul 22000 store eol 32000 recall 23000 eq 31000 recall mul 23000 store eol 32000 recall 24000 eq 31000 recall mul 24000 store eol 32000 recall 25000 eq 31000 recall mul 25000 store eol 32000 recall 26000 eq 31000 recall mul 26000 store eol eol 32000 recall /* currently selected letter */ eol 0x00010038 input_state /* scroll wheel */ eol add eol 27000 add eol 27000 mod /* wrap around */ eol 0x00090001 input_state_binary not /* left mouse button */ eol mul /* reset if left button (accept letter) pressed */ eol 0x00090002 input_state_binary not /* right mouse button */ eol mul /* reset if right button (enter) pressed */ eol 0x00090003 input_state_binary not /* middle mouse button */ eol mul /* reset if middle button (backspace) pressed */ eol 32000 store /* currently selected letter */ eol eol 0x00010038 input_state 0 eq not /* scroll wheel */ eol 31000 store /* letter pending */ eol eol 0x00010038 input_state 0 eq not /* scroll wheel */ eol 29000 recall /* did we want backspace on next scroll? */ eol mul eol 28000 store /* backspace */ eol eol 29000 recall /* do we want backspace on next scroll */ eol 0x00010038 input_state 0 eq not /* scroll wheel */ eol bitwise_or eol 0x00090001 input_state_binary not /* left mouse button */ eol mul /* no backspace after accepting letter */ eol 0x00090002 input_state_binary not /* right mouse button */ eol mul /* no backspace after enter */ eol 0x00090003 input_state_binary not /* middle mouse button */ eol mul /* no backspace after (explicit) backspace */ eol 29000 store /* do we want backspace on next scroll */",
                 "",
                 "",
                 "",
